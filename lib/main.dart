@@ -1,24 +1,14 @@
-
 import 'package:chat/pages/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:chat/pages/chat_page.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
-  // WidgetsBinding.ensureInitialised();
+  WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  Future<void> audio_permission() async {
-    await Permission.audio;
-    await Permission.manageExternalStorage;
-    await Permission.microphone;
-    await Permission.accessMediaLocation;
-  }
 
   @override
   Widget build(BuildContext context) {
