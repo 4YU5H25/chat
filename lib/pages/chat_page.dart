@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:permission_handler/permission_handler.dart';
+// import 'package:google_fonts/google_fonts.dart';
 // import 'package:tflite_audio/tflite_audio.dart';
 
 void main() {
@@ -27,6 +28,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   TextEditingController message = TextEditingController();
+  ScrollController _scrollController = ScrollController();
 
   String _text = '';
   static ChatUser user = ChatUser(
@@ -55,20 +57,15 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> audio_permission() async {
-    await Permission.audio;
-    await Permission.manageExternalStorage;
-    await Permission.microphone;
-    await Permission.accessMediaLocation;
+    await Permission.audio.request();
+    await Permission.manageExternalStorage.request();
+    await Permission.microphone.request();
+    await Permission.accessMediaLocation.request();
   }
 
   void _sendMessage(String text, bool isAudio) async {
     if (text.trim().isNotEmpty || !isAudio) {
       // Pass input to TFLite model
-      // var output = await TfliteAudio. runModelOnText(
-      //   text: text,
-      // );
-      // Do something with output
-      // print(output);
 
       // Add message to chat UI
       setState(() {
@@ -78,6 +75,13 @@ class _ChatPageState extends State<ChatPage> {
           createdAt: DateTime.now(),
         ));
       });
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     }
   }
 
@@ -85,9 +89,25 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat with TFLite Model'),
+        leading: Container(
+          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+            style: IconButton.styleFrom(foregroundColor: Colors.black),
+          ),
+        ),
+        title: const Center(
+            child: Text(
+          'AI Helper',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        )),
         backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
+        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -107,6 +127,7 @@ class _ChatPageState extends State<ChatPage> {
                   messages: messages,
                   inputOptions: InputOptions(
                     textController: message,
+                    autocorrect: true,
                     inputDecoration: InputDecoration(
                         border: InputBorder.none, // Assuming you want no border
 

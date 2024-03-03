@@ -1,8 +1,12 @@
+
+import 'package:chat/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
+  // WidgetsBinding.ensureInitialised();
+  // await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -25,7 +29,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ChatPage(),
+      // home: StreamBuilder(
+      //   stream: FirebaseAuth.instance.authStateChanges(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.hasData) {
+      //       return ChatPage();
+      //     } else {
+      //       return SignupPage();
+      //     }
+      //   },
+      // ),
+      home: SignupPage(),
     );
   }
 }

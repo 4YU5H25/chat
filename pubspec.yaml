@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   dash_chat_2: ^0.0.18
   permission_handler: ^11.0.1
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.24.2
+  google_fonts: ^6.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
