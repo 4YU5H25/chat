@@ -1,8 +1,13 @@
 import 'dart:io';
 
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/pages/firebase_auth_service.dart';
+import 'package:chat/pages/google.dart';
+import 'package:chat/pages/home.dart';
 import 'package:chat/pages/login.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+// import 'firebase_auth_service.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -19,7 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // final FirebaseAuthService _auth = FirebaseAuthService();
-
+  bool signin = false;
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -50,6 +55,8 @@ class _SignupPageState extends State<SignupPage> {
             //   Colors.blue,
             //   Color.fromARGB(255, 24, 55, 255),
             // ]),
+            // image: DecorationImage(
+            //     image: AssetImage("assets/bg.jpg"), fit: BoxFit.fitWidth),
             ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -164,6 +171,7 @@ class _SignupPageState extends State<SignupPage> {
                 const SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () async {
+                    print("signup pressed");
                     if (_formKey.currentState!.validate()) {
                       if (_passwordController.text !=
                           _confirmPasswordController.text) {
@@ -177,12 +185,9 @@ class _SignupPageState extends State<SignupPage> {
                       String username = namecontroller.text;
                       String email = emailcontroller.text;
                       String pass = _passwordController.text;
-
-                      // User? user =
-                      //     await _auth.signupwithEmailandPassword(email, pass);
-                      // if (user != null) {
-                      //   print("user created");
-                      // }
+                      await AuthServices.signupUser(
+                          email, pass, username, context);
+                      Future.delayed(const Duration(seconds: 4));
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => ChatPage()));
                     }
@@ -197,9 +202,16 @@ class _SignupPageState extends State<SignupPage> {
                   width: inputContainerWidth,
                   child: Center(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await signinwithgoogle(signin, context);
+                        if (signin == true) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ChatPage()));
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 255, 255, 255)),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -211,6 +223,8 @@ class _SignupPageState extends State<SignupPage> {
                         ],
                       ),
                     ),
+
+                    // child: signinbutton(),
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -223,11 +237,11 @@ class _SignupPageState extends State<SignupPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Already have an account? "),
+                    const Text("Already have an account? "),
                     TextButton(
                       onPressed: () {
                         // Add your navigation to login page logic here
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => Login()));
                       },
                       child: const Text('Log in'),

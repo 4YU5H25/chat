@@ -1,6 +1,9 @@
-
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/pages/google.dart';
+// import 'package:chat/pages/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
+
+import 'firebase_auth_service.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class _LoginState extends State<Login> {
   final TextEditingController emailcontroller = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool signin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +103,11 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 20.0),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      String email = emailcontroller.text;
+                      String password = _passwordController.text;
+                      await AuthServices.signinUser(email, password, context);
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => ChatPage()));
                     }
@@ -115,7 +122,13 @@ class _LoginState extends State<Login> {
                   width: inputContainerWidth,
                   child: Center(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        signinwithgoogle(signin, context);
+                        if (signin == true) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ChatPage()));
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 255, 255, 255)),
                       child: Row(

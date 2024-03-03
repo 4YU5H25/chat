@@ -1,27 +1,63 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chat/pages/firebasefunctions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-// class FirebaseAuthService {
-//   final FirebaseAuth _auth = FirebaseAuth.instance;
+class AuthServices {
+  static Future<void> signupUser(
+      String email, String password, String name, BuildContext context) async {
+    print("inside signup function");
+    try {
+      print("try");
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+      await FirebaseAuth.instance.currentUser!.updateEmail(email);
+      await FirestoreServices.saveUser(name, email, userCredential.user!.uid);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Registration Successful')));
+      print("user registered");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Password Provided is too weak')));
+      } else if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Email Provided already Exists')));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
-//   Future<User?> signupwithEmailandPassword(
-//       String email, String password) async {
-//     try {
-//       UserCredential credential = await _auth.createUserWithEmailAndPassword(
-//           email: email, password: password);
-//       return credential.user;
-//     } catch (e) {
-//       print("Some error occured: $e");
-//     }
-//   }
+  static signinUser(String email, String password, BuildContext context) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
 
-//   Future<User?> signinwithEmailandPassword(
-//       String email, String password) async {
-//     try {
-//       UserCredential credential = await _auth.signInWithEmailAndPassword(
-//           email: email, password: password);
-//       return credential.user;
-//     } catch (e) {
-//       print("Some error occured: $e");
-//     }
-//   }
-// }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('You are Logged in')));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('No user Found with this Email')));
+      } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Password did not match')));
+      }
+    }
+  }
+
+  static signoutUser(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('You are Logged Out')));
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+}
