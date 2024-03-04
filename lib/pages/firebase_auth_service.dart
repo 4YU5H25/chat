@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthServices {
-  static Future<void> signupUser(
+  static Future<String> signupUser(
       String email, String password, String name, BuildContext context) async {
     print("inside signup function");
     try {
@@ -17,6 +17,7 @@ class AuthServices {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Registration Successful')));
       print("user registered");
+      return email;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -29,13 +30,16 @@ class AuthServices {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }
+    return "failed";
   }
 
-  static signinUser(String email, String password, BuildContext context) async {
+  static Future<String> signinUser(
+      String email, String password, BuildContext context) async {
+    String res = '';
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-
+      res = '$email';
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('You are Logged in')));
     } on FirebaseAuthException catch (e) {
@@ -47,6 +51,7 @@ class AuthServices {
             .showSnackBar(SnackBar(content: Text('Password did not match')));
       }
     }
+    return res;
   }
 
   static signoutUser(BuildContext context) async {

@@ -1,5 +1,6 @@
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/google.dart';
+import 'package:chat/pages/home.dart';
 // import 'package:chat/pages/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -107,9 +108,12 @@ class _LoginState extends State<Login> {
                     if (_formKey.currentState!.validate()) {
                       String email = emailcontroller.text;
                       String password = _passwordController.text;
-                      await AuthServices.signinUser(email, password, context);
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => ChatPage()));
+                      String res = await AuthServices.signinUser(
+                          email, password, context);
+                      if (res != '') {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Home(res)));
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

@@ -5,56 +5,6 @@ import 'package:flutter/material.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
-TextEditingController message = TextEditingController();
-ScrollController _scrollController = ScrollController();
-
-Future<dynamic> makePostRequest(String text) async {
-  var url = Uri.parse('https://127.0.0.1:8000/chat');
-
-  // This is an example JSON body. Replace it with your actual request body.
-  var body = {"message": text};
-  final jsonbody = jsonEncode(body);
-
-  try {
-    var response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonbody, // Encode your body to JSON format
-    );
-
-    if (response.statusCode == 200) {
-      print('POST request successful');
-      print('Response: ${response.body}');
-    } else {
-      print('POST request failed with status: ${response.statusCode}');
-    }
-  } catch (e) {
-    print('POST request failed: $e');
-  }
-}
-
-String _text = '';
-ChatUser user = ChatUser(
-  id: '1',
-  firstName: 'Charles',
-  lastName: 'Leclerc',
-);
-ChatUser model = ChatUser(
-  id: '2',
-  firstName: 'AI',
-  lastName: 'Helper',
-);
-
-List<ChatMessage> messages = <ChatMessage>[
-  ChatMessage(
-    text: 'Hey!',
-    user: user,
-    createdAt: DateTime.now(),
-  ),
-];
-
 // Future<void> audio_permission() async {
 //   await Permission.microphone.request();
 //   // await Permission.audio.request();
@@ -70,11 +20,76 @@ class ChatWidget extends StatefulWidget {
 }
 
 class _ChatWidgetState extends State<ChatWidget> {
+  TextEditingController message = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+
+  bool typing = false;
+
+  Future<dynamic> makePostRequest(String text) async {
+    setState(() {
+      typing = true;
+    });
+    var url = Uri.parse('http://127.0.0.1:8000/chat');
+
+    // This is an example JSON body. Replace it with your actual request body.
+    var body = {"message": text};
+    final jsonbody = jsonEncode(body);
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonbody, // Encode your body to JSON format
+      );
+
+      if (response.statusCode == 200) {
+        print('POST request successful');
+        print('Response: ${response.body.toString()}');
+        setState(() {
+          messages.insert(
+              0,
+              ChatMessage(
+                text: response.body,
+                user: model, // Assuming the response is from the chatbot
+                createdAt: DateTime.now(),
+              ));
+          typing = false;
+        });
+      } else {
+        print('POST request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('POST request failed: $e');
+    }
+  }
+
+  String _text = '';
+  static ChatUser user = ChatUser(
+    id: '1',
+    firstName: 'Charles',
+    lastName: 'Leclerc',
+  );
+  ChatUser model = ChatUser(
+    id: '2',
+    firstName: 'AI',
+    lastName: 'Helper',
+  );
+
+  List<ChatMessage> messages = <ChatMessage>[
+    ChatMessage(
+      text: 'Hey!',
+      user: user,
+      createdAt: DateTime.now(),
+    ),
+  ];
   void _sendMessage(String? text, bool isAudio) async {
     if (text!.trim().isNotEmpty || !isAudio || text != null) {
       // Pass input to TFLite model
 
       // Add message to chat UI
+      print("message is $text");
 
       setState(() {
         messages.insert(
@@ -101,7 +116,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   void initState() {
     super.initState();
-    // audio_permission();
+    makePostRequest("Hey!");
   }
 
   @override
@@ -153,7 +168,7 @@ class _ChatWidgetState extends State<ChatWidget> {
           );
         },
       ),
-      typingUsers: [model],
+      typingUsers: typing == true ? [model] : [],
       currentUser: user,
       messageOptions: MessageOptions(
         onPressMessage: (p0) {

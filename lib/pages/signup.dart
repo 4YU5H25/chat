@@ -189,7 +189,7 @@ class _SignupPageState extends State<SignupPage> {
                           email, pass, username, context);
                       Future.delayed(const Duration(seconds: 4));
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => ChatPage()));
+                          MaterialPageRoute(builder: (context) => Home(email)));
                     }
                   },
                   style: ElevatedButton.styleFrom(
