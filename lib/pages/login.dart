@@ -111,8 +111,8 @@ class _LoginState extends State<Login> {
                       String res = await AuthServices.signinUser(
                           email, password, context);
                       if (res != '') {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => Home(res)));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Home(mail: res)));
                       }
                     }
                   },
@@ -126,11 +126,15 @@ class _LoginState extends State<Login> {
                   width: inputContainerWidth,
                   child: Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        signinwithgoogle(signin, context);
+                      onPressed: () async {
+                        var response = await signinwithgoogle(context);
                         if (signin == true) {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ChatPage()));
+                              builder: (context) => Home(
+                                    mail: response['email'],
+                                    name: response['name'],
+                                    link: response['picture'],
+                                  )));
                         }
                       },
                       style: ElevatedButton.styleFrom(

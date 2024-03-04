@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/login.dart';
 import 'package:chat/pages/quiz.dart';
@@ -5,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:chat/pages/firebase_auth_service.dart';
 
 class Home extends StatefulWidget {
-  Home(this.mail);
+  Home({required this.mail, this.link = '', this.name = ''});
   String mail = '';
+  String link = '';
+  String name = '';
   @override
   _HomeState createState() => _HomeState();
 }
@@ -57,14 +61,20 @@ class _HomeState extends State<Home> {
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.person,
-                    size: 100,
-                    color: Colors.white,
+                children: <Widget>[
+                  if (widget.link != '')
+                    ClipOval(child: Image.network(widget.link))
+                  else
+                    const Icon(
+                      Icons.person,
+                      size: 100,
+                      color: Colors.white,
+                    ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   Text(
-                    "Email: ${widget.mail}",
+                    "${widget.mail}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -73,6 +83,12 @@ class _HomeState extends State<Home> {
                   const SizedBox(
                     height: 20,
                   ),
+                  if (widget.name != '')
+                    Text(
+                      widget.name,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -176,7 +192,7 @@ class _HomeState extends State<Home> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Discover Your Mental Well-being",
+                                  "Little Hearts, Bright Minds",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -184,7 +200,7 @@ class _HomeState extends State<Home> {
                                   ),
                                 ),
                                 Text(
-                                  "Take a quiz",
+                                  "Discover Your Child's Mental Well-being ",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,

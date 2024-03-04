@@ -324,7 +324,7 @@ class _MentalHealthQuizPageState extends State<MentalHealthQuizPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(width: 10),
@@ -343,24 +343,24 @@ class _MentalHealthQuizPageState extends State<MentalHealthQuizPage> {
             ),
           ],
         ),
-        backgroundColor: Color.fromRGBO(149, 59, 238, 1),
+        backgroundColor: const Color.fromRGBO(149, 59, 238, 1),
       ),
       body: _questionIndex < _selectedQuestions.length
           ? Container(
-              color: Color.fromRGBO(149, 59, 238, 1),
+              color: const Color.fromRGBO(149, 59, 238, 1),
               child: ClipRRect(
                 borderRadius:
                     BorderRadius.circular(20.0), // Adjust the radius as needed
                 child: Container(
-                  margin: EdgeInsets.all(20.0),
-                  padding: EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(100, 32, 170, 1),
+                    color: const Color.fromRGBO(100, 32, 170, 1),
                     borderRadius: BorderRadius.circular(
                         20.0), // Same radius as ClipRRect for consistency
                   ),
                   child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -369,7 +369,7 @@ class _MentalHealthQuizPageState extends State<MentalHealthQuizPage> {
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
                             _selectedQuestions[_questionIndex]['questionText'],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 28.0,
                               fontWeight: FontWeight.bold,
                               color: Color.fromRGBO(225, 175, 209, 1),
@@ -390,12 +390,12 @@ class _MentalHealthQuizPageState extends State<MentalHealthQuizPage> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.deepPurple,
                                       foregroundColor: Colors.white,
-                                      padding: EdgeInsets.all(16.0),
+                                      padding: const EdgeInsets.all(16.0),
                                     ),
                                     child: Text(
                                       answer,
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 18.0,
                                       ),
                                     ),
@@ -411,36 +411,36 @@ class _MentalHealthQuizPageState extends State<MentalHealthQuizPage> {
               ),
             )
           : Container(
-              color: Color.fromRGBO(149, 59, 238, 1),
+              color: const Color.fromRGBO(149, 59, 238, 1),
               child: Center(
                 // Centering the final score part
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Quiz Completed!',
                       style: TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Text(
                       'Your score: $_score/${_selectedQuestions.length * 20}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       getMood(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 64.0,
                       ),
                     ),
                     Text(
                       opext(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15.0,
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.bold,

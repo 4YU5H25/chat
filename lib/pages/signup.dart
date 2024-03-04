@@ -188,8 +188,8 @@ class _SignupPageState extends State<SignupPage> {
                       await AuthServices.signupUser(
                           email, pass, username, context);
                       Future.delayed(const Duration(seconds: 4));
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Home(email)));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Home(mail: email)));
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -203,10 +203,14 @@ class _SignupPageState extends State<SignupPage> {
                   child: Center(
                     child: ElevatedButton(
                       onPressed: () async {
-                        await signinwithgoogle(signin, context);
+                        var response = await signinwithgoogle(context);
                         if (signin == true) {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ChatPage()));
+                              builder: (context) => Home(
+                                    mail: response['email'],
+                                    name: response['name'],
+                                    link: response['picture'],
+                                  )));
                         }
                       },
                       style: ElevatedButton.styleFrom(

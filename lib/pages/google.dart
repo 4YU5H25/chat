@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_web/web_only.dart';
 
-Future<void> signinwithgoogle(bool signin, BuildContext context) async {
+Future<dynamic> signinwithgoogle(BuildContext context) async {
+  print("signin called");
   final GoogleSignIn googleSignIn = GoogleSignIn(
     clientId: clientId,
     signInOption: SignInOption.standard,
@@ -14,9 +16,8 @@ Future<void> signinwithgoogle(bool signin, BuildContext context) async {
   );
 
   try {
-    GoogleSignInAccount? googleUser = (await googleSignIn.signInSilently(
-      reAuthenticate: true,
-    ));
+    print("inside try of gsignin");
+    GoogleSignInAccount? googleUser = (await googleSignIn.signIn());
 
     GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
@@ -27,21 +28,14 @@ Future<void> signinwithgoogle(bool signin, BuildContext context) async {
 
     UserCredential user =
         await FirebaseAuth.instance.signInWithCredential(credential);
-    signin = true;
+    print(user.additionalUserInfo!.profile.toString());
+
     print(user.user!.displayName);
+    return (user.additionalUserInfo!.profile);
   } on FirebaseAuthException catch (e) {
     // Handle error, e.g., show a snackbar or dialog
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Sign in failed: ${e.message}')),
     );
   }
-}
-
-Widget signinbutton() {
-  return renderButton(
-    configuration: GSIButtonConfiguration(
-        text: GSIButtonText.signin,
-        type: GSIButtonType.standard,
-        shape: GSIButtonShape.pill),
-  );
 }
