@@ -1,4 +1,5 @@
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/pages/firebase_auth_service.dart';
 
@@ -20,7 +21,10 @@ class _HomeState extends State<Home> {
           onPressed: () async {
             AuthServices.signoutUser(context);
           },
-          icon: const Icon(Icons.logout_sharp),
+          icon: const Icon(
+            Icons.logout_sharp,
+            color: Colors.white,
+          ),
         ),
         title: const Text(
           'Home',
@@ -65,6 +69,25 @@ class _HomeState extends State<Home> {
                       color: Colors.white,
                     ),
                   ),
+                  TextButton(
+                      onPressed: () async {
+                        await AuthServices.signoutUser(context);
+                      },
+                      child: Text(
+                        "Logout",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      )),
+                  TextButton(
+                      onPressed: () async {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Login()));
+                        await AuthServices.signoutUser(context);
+                      },
+                      child: Text("Login with Different Account",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold))),
                 ],
               ),
             ),
@@ -80,33 +103,138 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        child: Container(
-                          height: H / 5,
-                          width: W / 5,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(85, 0, 170, 255),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Center(
-                              child: Text(
-                            "Go to Chatbot",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          child: Container(
+                            height: H / 4,
+                            width: W / 5,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(85, 0, 170, 255),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          )),
+                            child: const Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Go to Chatbot",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  "Engage with your AI Helper",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            )),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage()),
+                            );
+                          },
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => ChatPage()),
-                          );
-                        },
-                      )
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          child: Container(
+                            height: H / 4,
+                            width: W / 5,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(85, 0, 170, 255),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.black)),
+                            child: const Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Discover Your Mental Well-being",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  "Take a quiz",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            )),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage()),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          child: Container(
+                            height: H / 4,
+                            width: W / 5,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(85, 0, 170, 255),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Harmony Navigator",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  "Discover Songs Tailored to Your Emotions",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            )),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage()),
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),

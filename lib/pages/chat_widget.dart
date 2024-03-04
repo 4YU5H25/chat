@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 // import 'package:permission_handler/permission_handler.dart';
@@ -101,6 +102,15 @@ class _ChatWidgetState extends State<ChatWidget> {
             ));
       });
       await makePostRequest(text);
+      // FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(user.id)
+      //     .collection('messages')
+      //     .add({
+      //   'text': text,
+      //   'user': user,
+      //   'createdAt': DateTime.now(),
+      // });
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
@@ -116,7 +126,29 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   void initState() {
     super.initState();
+    // loadMessages();
     makePostRequest("Hey!");
+  }
+
+  void loadMessages() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.id)
+        .collection('messages')
+        .get();
+    final List<ChatMessage> loadedMessages = [];
+    snapshot.docs.forEach((doc) {
+      loadedMessages.add(
+        ChatMessage(
+          text: doc['text'],
+          user: doc['user'],
+          createdAt: (doc['createdAt'] as Timestamp).toDate(),
+        ),
+      );
+    });
+    setState(() {
+      messages = loadedMessages;
+    });
   }
 
   @override
