@@ -1,5 +1,6 @@
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/login.dart';
+import 'package:chat/pages/quiz.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/pages/firebase_auth_service.dart';
 
@@ -69,22 +70,31 @@ class _HomeState extends State<Home> {
                       color: Colors.white,
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   TextButton(
                       onPressed: () async {
                         await AuthServices.signoutUser(context);
                       },
-                      child: Text(
+                      child: const Text(
                         "Logout",
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       )),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   TextButton(
                       onPressed: () async {
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => Login()));
                         await AuthServices.signoutUser(context);
                       },
-                      child: Text("Login with Different Account",
+                      child: const Text("Login with Different Account",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold))),
@@ -186,7 +196,7 @@ class _HomeState extends State<Home> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => ChatPage()),
+                                  builder: (context) => MentalHealthQuizPage()),
                             );
                           },
                         ),
@@ -218,7 +228,7 @@ class _HomeState extends State<Home> {
                                   ),
                                 ),
                                 Text(
-                                  "Discover Songs Tailored to Your Emotions",
+                                  "Discover Melodies Tailored to Your Emotions",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,

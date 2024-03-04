@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,8 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 's2t.dart';
 
 // Future<void> audio_permission() async {
 //   await Permission.microphone.request();
@@ -23,8 +26,12 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   TextEditingController message = TextEditingController();
   ScrollController _scrollController = ScrollController();
-
+  FocusNode focusNode = FocusNode();
   bool typing = false;
+
+  String lastwords = '';
+
+  bool micon = false;
 
   Future<dynamic> makePostRequest(String text) async {
     setState(() {
@@ -128,6 +135,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     super.initState();
     // loadMessages();
     makePostRequest("Hey!");
+    SpeechToTextService.initSpeech();
   }
 
   void loadMessages() async {
@@ -161,6 +169,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       inputOptions: InputOptions(
         textController: message,
         autocorrect: true,
+        focusNode: focusNode,
         inputDecoration: InputDecoration(
             border: InputBorder.none, // Assuming you want no border
 
@@ -180,20 +189,41 @@ class _ChatWidgetState extends State<ChatWidget> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.mic),
+                  icon: micon == false
+                      ? const Icon(Icons.mic)
+                      : const Icon(Icons.stop_circle),
                   splashColor: Colors.grey,
                   style: IconButton.styleFrom(
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     // Add your logic to start recording audio here
+                    if (micon == false) {
+                      await SpeechToTextService.startListening();
+                      setState(() {
+                        micon = true;
+                      });
+                    } else {
+                      SpeechToTextService.stopListening();
+                      setState(() {
+                        micon = false;
+                      });
+                    }
+                    setState(() {
+                      lastwords = SpeechToTextService.lastWords;
+                      message.text = lastwords;
+                    });
                   },
                 ),
                 IconButton(
                   icon: const Icon(Icons.send_outlined),
                   color: Colors.white, // Adjust icon color if needed
-                  onPressed: () => _sendMessage(
-                      message.text, false), // Replace with your send logic
+                  onPressed: () {
+                    _sendMessage(message.text, false);
+                    setState(() {
+                      message.text = '';
+                    });
+                  }, // Replace with your send logic
                 ),
               ],
             ),
@@ -202,6 +232,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       ),
       typingUsers: typing == true ? [model] : [],
       currentUser: user,
+      quickReplyOptions: const QuickReplyOptions(),
       messageOptions: MessageOptions(
         onPressMessage: (p0) {
           return Container(
