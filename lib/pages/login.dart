@@ -108,12 +108,7 @@ class _LoginState extends State<Login> {
                     if (_formKey.currentState!.validate()) {
                       String email = emailcontroller.text;
                       String password = _passwordController.text;
-                      String res = await AuthServices.signinUser(
-                          email, password, context);
-                      if (res != '') {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Home(mail: res)));
-                      }
+                      
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -127,15 +122,7 @@ class _LoginState extends State<Login> {
                   child: Center(
                     child: ElevatedButton(
                       onPressed: () async {
-                        var response = await signinwithgoogle(context);
-                        if (signin == true) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Home(
-                                    mail: response['email'],
-                                    name: response['name'],
-                                    link: response['picture'],
-                                  )));
-                        }
+                        
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 255, 255, 255)),
